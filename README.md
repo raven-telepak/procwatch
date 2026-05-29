@@ -2,6 +2,8 @@
 
 A lightweight process triage tool for macOS (Windows and Linux support potentially on the way). Designed to bridge the gap between technical and non-technical users who want to understand what's running on their machine and safely free up resources.
 
+Primarily made to free up resources on older machines, is slowly spiraling into something more.
+
 ## Features
 - [x] Enumerate all running processes with CPU and memory usage
 - [x] Detect ghost processes (executable no longer exists on disk)
