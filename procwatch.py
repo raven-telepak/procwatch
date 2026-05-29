@@ -16,7 +16,7 @@ def enumerate_processes():
     process_list = [] #empty list for proc results
 
     for proc in psutil.process_iter(): #collects info from procs
-        try:
+        try: #contingency if cant access
             proc_dict = {
                 "pid" : proc.pid,
                 "name" : proc.name(),
@@ -29,7 +29,7 @@ def enumerate_processes():
 
     return process_list #brings compiled list back
 
-def detect_ghost_processes(process_list):
+def detect_ghost_processes(process_list): #flags processes with no paths
     ghost_processes = []
 
     for proc in process_list:
@@ -42,18 +42,34 @@ def detect_ghost_processes(process_list):
 
     return ghost_processes
 
-def flag_suspicious_paths(process_list):
-    suspicious = []
+def flag_suspicious_paths(process_list): #flags specific paths
+    suspicious = [] #list of suspicious paths
 
     for proc in process_list:
         exe = proc["exe"]
 
         if not exe: continue
 
-        if not any(exe.startswith(path) for path in TRUSTED_PATHS):
+        if not any(exe.startswith(path) for path in TRUSTED_PATHS): #checks against trusted paths list
             suspicious.append(proc)
 
     return suspicious
+
+def flag_network_connections(process_list): #checks established remote network connections
+    established_connections = [] #list of connections
+
+    for proc in process_list:
+        try: #contigency if no network connection
+            connections = psutil.Process(proc["pid"]).connections()
+            for conn in connections:
+                if conn.status == "ESTABLISHED" and conn.raddr: #checks if established and remote
+                    established_connections.append(proc)
+                    break
+        except Exception: continue
+
+    return established_connections
+
+
 
 
 #test block
@@ -70,9 +86,16 @@ def flag_suspicious_paths(process_list):
 #   for p in ghosts:
 #       print(p)
 
-if __name__ == "__main__": #tests flag_suspicious_paths
+# if __name__ == "__main__": #tests flag_suspicious_paths
+#     processes = enumerate_processes()
+#     suspicious = flag_suspicious_paths(processes)
+#     print(f"\nSuspicious paths found: {len(suspicious)}")
+#     for p in suspicious:
+#         print(p)
+
+if __name__ == "__main__": #tests flag_network_connections
     processes = enumerate_processes()
-    suspicious = flag_suspicious_paths(processes)
-    print(f"\nSuspicious paths found: {len(suspicious)}")
-    for p in suspicious:
+    network = flag_network_connections(processes)
+    print(f"\nProcesses with established connections: {len(network)}")
+    for p in network:
         print(p)

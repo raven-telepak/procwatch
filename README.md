@@ -8,7 +8,7 @@ Primarily made to free up resources on older machines, is slowly spiraling into 
 - [x] Enumerate all running processes with CPU and memory usage
 - [x] Detect ghost processes (executable no longer exists on disk)
 - [x] Flag suspicious processes running from unusual directories
-- [ ] Flag processes with active outbound network connections
+- [x] Flag processes with active outbound network connections
 - [ ] SHA-256 hashing for unknown processes
 - [ ] Risk classification (Safe / Unknown / Suspicious)
 - [ ] Plain English explanations for non-technical users
