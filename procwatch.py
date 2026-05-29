@@ -9,6 +9,7 @@ TRUSTED_PATHS = [
     "/Library/",
     "/Applications/",
     "/private/",
+    os.path.expanduser("~/Applications/"), #user specific app folder
 ]
 
 def enumerate_processes():
@@ -68,3 +69,10 @@ def flag_suspicious_paths(process_list):
 #   print(f"\nGhost processes found: {len(ghosts)}")
 #   for p in ghosts:
 #       print(p)
+
+if __name__ == "__main__": #tests flag_suspicious_paths
+    processes = enumerate_processes()
+    suspicious = flag_suspicious_paths(processes)
+    print(f"\nSuspicious paths found: {len(suspicious)}")
+    for p in suspicious:
+        print(p)
