@@ -9,7 +9,7 @@ Primarily made to free up resources on older machines, is slowly spiraling into 
 - [x] Detect ghost processes (executable no longer exists on disk)
 - [x] Flag suspicious processes running from unusual directories
 - [x] Flag processes with active outbound network connections
-- [ ] SHA-256 hashing for unknown processes
+- [x] SHA-256 hashing for unknown processes
 - [ ] Risk classification (Safe / Unknown / Suspicious)
 - [ ] Plain English explanations for non-technical users
 - [ ] Safe process termination with verified kill list

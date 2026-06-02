@@ -1,5 +1,8 @@
 import psutil
 import os
+import hashlib
+
+from pkg_resources import non_empty_lines
 
 TRUSTED_PATHS = [
     "/usr/",
@@ -42,7 +45,7 @@ def detect_ghost_processes(process_list): #flags processes with no paths
 
     return ghost_processes
 
-def flag_suspicious_paths(process_list): #flags specific paths
+def flag_suspicious_paths(process_list): #flags suspicious paths
     suspicious = [] #list of suspicious paths
 
     for proc in process_list:
@@ -69,6 +72,19 @@ def flag_network_connections(process_list): #checks established remote network c
 
     return established_connections
 
+def hash_process(proc):
+    exe = proc["exe"]
+
+    if not exe: return None
+
+    try:
+        sha256 = hashlib.sha256()
+        with open(exe, "rb") as f:
+            while chunk := f.read(4096):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    except Exception:
+        return None
 
 
 
@@ -93,9 +109,16 @@ def flag_network_connections(process_list): #checks established remote network c
 #     for p in suspicious:
 #         print(p)
 
-if __name__ == "__main__": #tests flag_network_connections
+# if __name__ == "__main__": #tests flag_network_connections
+#     processes = enumerate_processes()
+#     network = flag_network_connections(processes)
+#     print(f"\nProcesses with established connections: {len(network)}")
+#     for p in network:
+#         print(p)
+
+if __name__ == "__main__": #hash_process test block
     processes = enumerate_processes()
-    network = flag_network_connections(processes)
-    print(f"\nProcesses with established connections: {len(network)}")
-    for p in network:
-        print(p)
+    test_proc = processes[0]  # grab the first process in the list
+    print(f"Hashing: {test_proc['name']} at {test_proc['exe']}")
+    result = hash_process(test_proc)
+    print(f"SHA-256: {result}")
