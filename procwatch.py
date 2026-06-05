@@ -1,9 +1,16 @@
+#enumerate_processes: collects pid, name, exe, cpu, and memory usage from processes
+#detect_ghost_processes: flags processes with no paths from enumerate_processes
+#flag_suspicious_paths: flags suspicious paths from enumerate_processes
+#flag_network_connections: flags remote network connections from enumerate_processes
+#hash_process: generates sha256 hash from individual procs
+
 import psutil
 import os
 import hashlib
 
 from pkg_resources import non_empty_lines
 
+# ---list of trusted process paths---
 TRUSTED_PATHS = [
     "/usr/",
     "/bin/",
@@ -15,6 +22,7 @@ TRUSTED_PATHS = [
     os.path.expanduser("~/Applications/"), #user specific app folder
 ]
 
+#---enumerate_processes: collects pid, name, exe, cpu, and memory usage from processes---
 def enumerate_processes():
     process_list = [] #empty list for proc results
 
@@ -32,7 +40,8 @@ def enumerate_processes():
 
     return process_list #brings compiled list back
 
-def detect_ghost_processes(process_list): #flags processes with no paths
+#---detect_ghost_processes: flags processes with no paths from enumerate_processes---
+def detect_ghost_processes(process_list):
     ghost_processes = []
 
     for proc in process_list:
@@ -45,7 +54,8 @@ def detect_ghost_processes(process_list): #flags processes with no paths
 
     return ghost_processes
 
-def flag_suspicious_paths(process_list): #flags suspicious paths
+#---flag_suspicious_paths: flags suspicious paths from enumerate_processes---
+def flag_suspicious_paths(process_list):
     suspicious = [] #list of suspicious paths
 
     for proc in process_list:
@@ -58,7 +68,8 @@ def flag_suspicious_paths(process_list): #flags suspicious paths
 
     return suspicious
 
-def flag_network_connections(process_list): #checks established remote network connections
+#---flag_network_connections: flags remote network connections from enumerate_processes---
+def flag_network_connections(process_list):
     established_connections = [] #list of connections
 
     for proc in process_list:
@@ -72,6 +83,7 @@ def flag_network_connections(process_list): #checks established remote network c
 
     return established_connections
 
+#---hash_process: generates sha256 hash from individual procs---
 def hash_process(proc):
     exe = proc["exe"]
 
@@ -88,7 +100,7 @@ def hash_process(proc):
 
 
 
-#test block
+#---test block---
 
 # if __name__ == "__main__": #test enumerate_processes
 #    processes = enumerate_processes()
@@ -116,9 +128,9 @@ def hash_process(proc):
 #     for p in network:
 #         print(p)
 
-if __name__ == "__main__": #hash_process test block
-    processes = enumerate_processes()
-    test_proc = processes[0]  # grab the first process in the list
-    print(f"Hashing: {test_proc['name']} at {test_proc['exe']}")
-    result = hash_process(test_proc)
-    print(f"SHA-256: {result}")
+# if __name__ == "__main__": #hash_process test block
+#     processes = enumerate_processes()
+#     test_proc = processes[0]  # grab the first process in the list
+#     print(f"Hashing: {test_proc['name']} at {test_proc['exe']}")
+#     result = hash_process(test_proc)
+#     print(f"SHA-256: {result}")
