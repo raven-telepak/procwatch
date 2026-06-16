@@ -11,7 +11,7 @@ Primarily made to free up resources on older machines, is slowly spiraling into 
 - [x] Flag processes with active outbound network connections
 - [x] SHA-256 hashing for unknown processes
 - [x] Risk classification (Safe / Unknown / Suspicious)
-- [ ] Plain English explanations for non-technical users
+- [x] Plain English explanations for non-technical users
 - [ ] Safe process termination with verified kill list
 - [ ] Autokill persistence per process
 - [ ] Config mode
